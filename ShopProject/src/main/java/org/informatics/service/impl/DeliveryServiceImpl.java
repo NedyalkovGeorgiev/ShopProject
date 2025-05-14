@@ -1,7 +1,7 @@
 package org.informatics.service.impl;
 
-import org.informatics.data.ItemEntity;
-import org.informatics.data.ShopEntity;
+import org.informatics.data.Item;
+import org.informatics.data.Shop;
 import org.informatics.service.DeliveryService;
 
 import java.util.Map;
@@ -9,18 +9,18 @@ import java.util.Map;
 public class DeliveryServiceImpl implements DeliveryService {
 
     @Override
-    public void delivery(Map<ItemEntity, Integer> deliveredItems, ShopEntity shopEntity) {
-        for (ItemEntity itemEntity : deliveredItems.keySet()) {
-            updateDeliveredItems(itemEntity, deliveredItems.get(itemEntity), shopEntity);
-            updateAvailableItems(itemEntity, deliveredItems.get(itemEntity), shopEntity);
+    public void delivery(Map<Item, Integer> deliveredItems, Shop shop) {
+        for (Item item : deliveredItems.keySet()) {
+            updateDeliveredItems(item, deliveredItems.get(item), shop);
+            updateAvailableItems(item, deliveredItems.get(item), shop);
         }
     }
 
-    private void updateDeliveredItems(ItemEntity itemEntity, Integer quantity, ShopEntity shopEntity) {
-        shopEntity.getDeliveredItems().put(itemEntity, shopEntity.getDeliveredItems().get(itemEntity) + quantity);
+    private void updateDeliveredItems(Item item, Integer quantity, Shop shop) {
+        shop.getDeliveredItems().put(item, shop.getDeliveredItems().get(item) + quantity);
     }
 
-    private void updateAvailableItems(ItemEntity itemEntity, Integer quantity, ShopEntity shopEntity) {
-        shopEntity.getAvailableItems().put(itemEntity, shopEntity.getAvailableItems().get(itemEntity) + quantity);
+    private void updateAvailableItems(Item item, Integer quantity, Shop shop) {
+        shop.getAvailableItems().put(item, shop.getAvailableItems().get(item) + quantity);
     }
 }

@@ -1,7 +1,7 @@
 package org.informatics.service;
 
-import org.informatics.data.ShopEntity;
+import org.informatics.data.Shop;
 
 public interface InvoiceSequenceService {
-    Long incrementInvoiceSequenceId(ShopEntity shopEntity);
+    Long incrementInvoiceSequenceId(Shop shop);
 }

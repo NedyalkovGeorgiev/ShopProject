@@ -1,10 +1,10 @@
 package org.informatics.service;
 
-import org.informatics.data.ItemEntity;
-import org.informatics.data.ShopEntity;
+import org.informatics.data.Item;
+import org.informatics.data.Shop;
 
 import java.util.Map;
 
 public interface DeliveryService {
-    void delivery(Map<ItemEntity, Integer> deliveredItems, ShopEntity shopEntity);
+    void delivery(Map<Item, Integer> deliveredItems, Shop shop);
 }

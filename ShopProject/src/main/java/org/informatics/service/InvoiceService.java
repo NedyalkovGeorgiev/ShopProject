@@ -1,8 +1,13 @@
 package org.informatics.service;
 
-import org.informatics.data.InvoiceEntity;
-import org.informatics.data.ShopEntity;
+import org.informatics.data.Employee;
+import org.informatics.data.Invoice;
+import org.informatics.data.Item;
+import org.informatics.data.Shop;
+
+import java.util.Date;
+import java.util.Map;
 
 public interface InvoiceService {
-    InvoiceEntity createInvoice(ShopEntity shopEntity);
+    Invoice createInvoice(Shop shop, Employee employee, Date date, Double totalPrice, Map<Item, Integer> items);
 }

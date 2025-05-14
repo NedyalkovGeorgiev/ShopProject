@@ -1,18 +1,18 @@
 package org.informatics.service.impl;
 
-import org.informatics.data.ShopEntity;
+import org.informatics.data.Shop;
 import org.informatics.service.InvoiceSequenceService;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class InvoiceSequenceImpl implements InvoiceSequenceService {
-    private final Map<ShopEntity, Long> shopEntityInvoiceSequenceEntityMap = new HashMap<>();
+public class InvoiceSequenceServiceImpl implements InvoiceSequenceService {
+    private final Map<Shop, Long> shopEntityInvoiceSequenceEntityMap = new HashMap<>();
 
     @Override
-    public Long incrementInvoiceSequenceId(ShopEntity shopEntity) {
+    public Long incrementInvoiceSequenceId(Shop shop) {
         return shopEntityInvoiceSequenceEntityMap.compute(
-                shopEntity,
+                shop,
                 (key, value) -> (value == null) ? 1L : value + 1
         );
     }
