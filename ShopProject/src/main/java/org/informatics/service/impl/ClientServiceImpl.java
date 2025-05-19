@@ -1,11 +1,14 @@
 package org.informatics.service.impl;
 
 import org.informatics.data.*;
+import org.informatics.exceptions.ItemNotFoundException;
+import org.informatics.exceptions.NotEnoughItemsInStockException;
 import org.informatics.service.ClientService;
 import org.informatics.service.InvoiceService;
 import org.informatics.service.ItemService;
 import org.informatics.utils.fileio.InvoiceFileIOUtil;
-
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 
@@ -29,32 +32,37 @@ public class ClientServiceImpl implements ClientService {
     public void payAtCashRegister(Cart cart, CashRegister cashRegister) {
         Shop shop = cashRegister.getShop();
 
-        validateItemAvailability(cart, shop);
+        try {
+            validateItemAvailability(cart, shop);
+        } catch (Exception exception) {
+            System.out.println(exception);
+            return;
+        }
+
         removeItemsFromShop(shop, cart);
 
         Invoice invoice = createInvoice(shop, cart, cashRegister.getEmployee());
 
         saveInvoice(invoice);
-
-        //TODO: The shop needs to increment its current invoice count
-        // shop.getInvoiceCount()++
-
-        //TODO: The shop needs to adjust its total income
-        // shop.getTotalIncome() += invoice.getTotalPrice()
     }
 
-    private void validateItemAvailability(Cart cart, Shop shop) {
+    private void validateItemAvailability(Cart cart, Shop shop) throws ItemNotFoundException, NotEnoughItemsInStockException {
         Map<Item, Integer> shopItems = shop.getAvailableItems();
         Map<Item, Integer> cartItems = cart.getItems();
 
         for (Item item : cartItems.keySet()) {
             if (!shopItems.containsKey(item)) {
-                throw new RuntimeException();
+                throw new ItemNotFoundException("The item: " + item.getName() + " not found!");
             }
 
-            if (shopItems.get(item) < cartItems.get(item)) {
-                throw new RuntimeException(); //TODO: implement exception handling
-            }
+            validateItemQuantity(shopItems.get(item), cartItems.get(item), item);
+        }
+    }
+
+    private void validateItemQuantity(int availableShopItems, int requiredCartItems, Item item) throws NotEnoughItemsInStockException {
+        if (availableShopItems < requiredCartItems) {
+            throw new NotEnoughItemsInStockException("Not enough items in stock! Item required: " + item.getName() +
+                    " Required quantity: " + requiredCartItems + " Available items: " + availableShopItems);
         }
     }
 
@@ -98,6 +106,12 @@ public class ClientServiceImpl implements ClientService {
     }
 
     private void saveInvoice(Invoice invoice) {
-        invoiceFileIOUtil.write(invoice);
+        try {
+            invoiceFileIOUtil.write(invoice);
+        } catch (FileNotFoundException fileNotFoundException) {
+            System.out.println("File could not be found!");
+        } catch (IOException ioException) {
+            System.out.println("File could not be saved!");
+        }
     }
 }

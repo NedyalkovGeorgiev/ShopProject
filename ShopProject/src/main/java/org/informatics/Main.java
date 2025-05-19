@@ -1,22 +1,31 @@
 package org.informatics;
 
 import org.informatics.data.*;
+import org.informatics.scheduler.ItemExpirationScheduler;
 import org.informatics.service.InvoiceService;
+import org.informatics.service.ShopService;
 import org.informatics.service.impl.InvoiceSequenceServiceImpl;
 import org.informatics.service.impl.InvoiceServiceImpl;
+import org.informatics.service.impl.ShopServiceImpl;
 import org.informatics.utils.fileio.InvoiceFileIOUtil;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) {
-        //Error Handling
-        //Tests
-        //Expiry date -> if expired DO NOT SELL!
-        //Scheduler to check if something expired
-        //Populate Main class/method
-        //beautify the design of the Invoice
-        //eventually? check if new directory is needed where the invoices will be created
+        // Tests
+        // Populate Main class/method
+        // Populate shop expenses/income
+        // Serialization and Deserialization
+        // Employees to be able to change registers
+        // Use getDiscount
+        // List with delivered and sold items
+        // At the end of the main method add shutdown for the scheduler
 
 
         InvoiceService invoiceService = new InvoiceServiceImpl(new InvoiceSequenceServiceImpl());
@@ -35,15 +44,28 @@ public class Main {
         items.put(new Item(4L, "Meso", 24.35D, Category.FOOD, new GregorianCalendar(2025, Calendar.MAY, 20).getTime()), 4);
         items.put(new Item(5L, "Voda", 1.50D,  Category.FOOD, new GregorianCalendar(2028, Calendar.JANUARY, 1).getTime()), 20);
 
-
         Invoice invoice = invoiceService.createInvoice(shop, employee, date, totalPrice, items);
         Invoice invoice1 = invoiceService.createInvoice(shop, employee, date, totalPrice, items);
         Invoice invoice2 = invoiceService.createInvoice(shop2, employee, date, totalPrice, items);
 
         InvoiceFileIOUtil invoiceFileIOUtil = new InvoiceFileIOUtil();
-        invoiceFileIOUtil.write(invoice);
-        invoiceFileIOUtil.write(invoice1);
-        invoiceFileIOUtil.write(invoice2);
-//        System.out.println(invoiceFileIOUtil.read("Invoice1"));
+        try {
+            invoiceFileIOUtil.write(invoice);
+            invoiceFileIOUtil.write(invoice1);
+            invoiceFileIOUtil.write(invoice2);
+        } catch (IOException ioException) {
+            System.out.println("Something happened while saving files!!!");
+        }
+        try {
+            System.out.println(invoiceFileIOUtil.read("Invoice1"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        ShopService shopService = new ShopServiceImpl(shop);
+        shop.setAvailableItems(items);
+
+        new ItemExpirationScheduler(shop, shopService, 1L, Executors.newScheduledThreadPool(1));
+
+        shopService.countInvoices();
     }
 }

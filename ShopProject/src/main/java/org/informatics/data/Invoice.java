@@ -17,19 +17,50 @@ public record Invoice(
     @Override
     public String toString() {
         StringBuilder invoiceToPrint = new StringBuilder();
-        invoiceToPrint.append("Invoice: ").append(id).append("\n");
-        invoiceToPrint.append("Date: ").append(date).append("\n");
-        invoiceToPrint.append("Employee: ").append(employee.getName()).append(" #").append(employee.getId()).append("\n");
 
+        String headerFormat = "%-20s %5s %10s %12s\n";
+        String rowFormat = "%-20s %5d %10.2f %12.2f\n";
+
+        StringBuilder temp = new StringBuilder();
+        temp.append(String.format(headerFormat, "Item", "Qty", "Unit Price", "Total"));
         for (Item item : invoiceItemData.keySet()) {
-            Integer quantity = invoiceItemData.get(item);
-            Double price = item.getPrice();
-
-            invoiceToPrint.append(item.getName()).append(" ")
-                    .append(quantity).append(" x ").append(price).append(": ").append(price * quantity).append("\n");
+            int quantity = invoiceItemData.get(item);
+            double price = item.getPrice();
+            double itemTotal = price * quantity;
+            temp.append(String.format(rowFormat, item.getName(), quantity, price, itemTotal));
+        }
+        String[] lines = temp.toString().split("\n");
+        int maxLineLength = 0;
+        for (String line : lines) {
+            maxLineLength = Math.max(maxLineLength, line.length());
         }
 
-        invoiceToPrint.append("Total Price: ").append(totalPrice).append("\n");
+        String equalLine = "=".repeat(maxLineLength);
+        String dashLine = "-".repeat(maxLineLength);
+
+        String title = "INVOICE";
+        int padding = (maxLineLength - title.length()) / 2;
+        String centeredTitle = "=".repeat(padding) + " " + title + " " + "=".repeat(maxLineLength - padding - title.length() - 2);
+
+        invoiceToPrint.append(centeredTitle).append("\n");
+        invoiceToPrint.append("Invoice ID : ").append(id).append("\n");
+        invoiceToPrint.append("Date       : ").append(date).append("\n");
+        invoiceToPrint.append("Employee   : ").append(employee.getName())
+                .append(" (ID: ").append(employee.getId()).append(")\n\n");
+
+        invoiceToPrint.append(String.format(headerFormat, "Item", "Qty", "Unit Price", "Total"));
+        invoiceToPrint.append(dashLine).append("\n");
+
+        for (Item item : invoiceItemData.keySet()) {
+            int quantity = invoiceItemData.get(item);
+            double price = item.getPrice();
+            double itemTotal = price * quantity;
+            invoiceToPrint.append(String.format(rowFormat, item.getName(), quantity, price, itemTotal));
+        }
+
+        invoiceToPrint.append(dashLine).append("\n");
+        invoiceToPrint.append(String.format("%-37s %10.2f\n", "TOTAL:", totalPrice));
+        invoiceToPrint.append(equalLine).append("\n");
 
         return invoiceToPrint.toString();
     }
