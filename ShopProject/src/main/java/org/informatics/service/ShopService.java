@@ -1,10 +1,13 @@
 package org.informatics.service;
 
 import org.informatics.data.Item;
+import org.informatics.data.Shop;
 
 import java.util.List;
 
 public interface ShopService {
-    void removeExpiredItem(List<Item> items);
-    void countInvoices();
+    void removeExpiredItem(Shop shop, List<Item> items);
+    void countInvoices(long shopId);
+    void calculateTotalIncome(long shopId);
+    void calculateExpenses(Shop shop);
 }

@@ -1,18 +1,18 @@
 package org.informatics.utils.fileio;
 
 import org.informatics.data.Invoice;
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import static org.informatics.Constants.*;
+
 public class InvoiceFileIOUtil extends FileIOUtil<Invoice> {
-    public String read(String fileName) throws FileNotFoundException, IOException {
-        return super.read(fileName);
+    public String read(String fileName, long shopId) throws IOException {
+        return super.read(INVOICE_DIRECTORY_NAME, fileName, shopId);
     }
 
-    public Invoice write(Invoice invoice) throws FileNotFoundException, IOException {
-        String fileName = "Invoice" + invoice.id();
+    public void write(Invoice invoice, long shopId) throws IOException {
+        String fileName = INVOICE_FILE_NAME + invoice.id() + INVOICE_FILE_NAME_DELIMITER + shopId;
 
-        return super.write(fileName, invoice);
+        super.write(INVOICE_DIRECTORY_NAME, fileName, invoice);
     }
 }

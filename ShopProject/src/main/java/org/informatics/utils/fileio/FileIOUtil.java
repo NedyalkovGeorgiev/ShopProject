@@ -2,10 +2,11 @@ package org.informatics.utils.fileio;
 
 import java.io.*;
 
+import static org.informatics.Constants.*;
+
 public abstract class FileIOUtil<T> {
-    protected String read(String fileName) throws FileNotFoundException, IOException {
-        String directory = "invoices";
-        fileName = directory + "/" + fileName;
+    protected String read(String directoryName, String fileName, long shopId) throws IOException {
+        fileName = directoryName + PATH_DELIMITER + fileName + INVOICE_FILE_NAME_DELIMITER + shopId;
 
         try (BufferedReader reader =
                      new BufferedReader(new FileReader(fileName))) {
@@ -25,10 +26,8 @@ public abstract class FileIOUtil<T> {
         }
     }
 
-    protected T write(String fileName, T object) throws FileNotFoundException, IOException {
-        String folderPath = "invoices";
-
-        File directory = new File(folderPath);
+    protected void write(String directoryName, String fileName, T object) throws IOException {
+        File directory = new File(directoryName);
         if(!directory.exists()) {
             directory.mkdirs();
         }
@@ -42,7 +41,5 @@ public abstract class FileIOUtil<T> {
         } catch (IOException ioException) {
             throw new IOException(ioException.toString());
         }
-
-        return object;
     }
 }

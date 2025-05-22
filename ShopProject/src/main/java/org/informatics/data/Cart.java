@@ -8,8 +8,4 @@ public class Cart {
     public Map<Item, Integer> getItems() {
         return items;
     }
-
-    public void setItems(Map<Item, Integer> items) {
-        this.items = items;
-    }
 }

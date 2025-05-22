@@ -3,7 +3,6 @@ package org.informatics.service.impl;
 import org.informatics.data.Item;
 import org.informatics.data.Shop;
 import org.informatics.service.DeliveryService;
-
 import java.util.Map;
 
 public class DeliveryServiceImpl implements DeliveryService {
@@ -17,10 +16,14 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     private void updateDeliveredItems(Item item, Integer quantity, Shop shop) {
-        shop.getDeliveredItems().put(item, shop.getDeliveredItems().get(item) + quantity);
+        Integer quantityOfItemInShop = shop.getDeliveredItems().get(item);
+
+        shop.getDeliveredItems().compute(item, (key, value) -> quantityOfItemInShop == null ? quantity : quantityOfItemInShop + quantity);
     }
 
     private void updateAvailableItems(Item item, Integer quantity, Shop shop) {
-        shop.getAvailableItems().put(item, shop.getAvailableItems().get(item) + quantity);
+        Integer quantityOfItemInShop = shop.getAvailableItems().get(item);
+
+        shop.getAvailableItems().compute(item, (key, value) -> quantityOfItemInShop == null ? quantity : quantityOfItemInShop + quantity);
     }
 }

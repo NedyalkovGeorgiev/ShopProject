@@ -2,6 +2,7 @@ package org.informatics.data;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ public record Invoice(
         Date date,
         Double totalPrice,
         Map<Item, Integer> invoiceItemData
-) {
+) implements Serializable {
 
     @NotNull
     @Override
@@ -25,9 +26,9 @@ public record Invoice(
         temp.append(String.format(headerFormat, "Item", "Qty", "Unit Price", "Total"));
         for (Item item : invoiceItemData.keySet()) {
             int quantity = invoiceItemData.get(item);
-            double price = item.getPrice();
+            double price = item.price();
             double itemTotal = price * quantity;
-            temp.append(String.format(rowFormat, item.getName(), quantity, price, itemTotal));
+            temp.append(String.format(rowFormat, item.name(), quantity, price, itemTotal));
         }
         String[] lines = temp.toString().split("\n");
         int maxLineLength = 0;
@@ -45,17 +46,17 @@ public record Invoice(
         invoiceToPrint.append(centeredTitle).append("\n");
         invoiceToPrint.append("Invoice ID : ").append(id).append("\n");
         invoiceToPrint.append("Date       : ").append(date).append("\n");
-        invoiceToPrint.append("Employee   : ").append(employee.getName())
-                .append(" (ID: ").append(employee.getId()).append(")\n\n");
+        invoiceToPrint.append("Employee   : ").append(employee.name())
+                .append(" (ID: ").append(employee.id()).append(")\n\n");
 
         invoiceToPrint.append(String.format(headerFormat, "Item", "Qty", "Unit Price", "Total"));
         invoiceToPrint.append(dashLine).append("\n");
 
         for (Item item : invoiceItemData.keySet()) {
             int quantity = invoiceItemData.get(item);
-            double price = item.getPrice();
+            double price = item.price();
             double itemTotal = price * quantity;
-            invoiceToPrint.append(String.format(rowFormat, item.getName(), quantity, price, itemTotal));
+            invoiceToPrint.append(String.format(rowFormat, item.name(), quantity, price, itemTotal));
         }
 
         invoiceToPrint.append(dashLine).append("\n");

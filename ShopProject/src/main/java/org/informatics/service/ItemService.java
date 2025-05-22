@@ -1,7 +1,7 @@
 package org.informatics.service;
 
-import java.util.Date;
+import org.informatics.data.Item;
 
 public interface ItemService {
-    Double getDiscount(Date expiryDate);
+    Double getDiscount(Item item);
 }
