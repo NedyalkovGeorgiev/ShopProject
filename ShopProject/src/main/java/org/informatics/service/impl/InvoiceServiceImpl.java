@@ -6,8 +6,8 @@ import org.informatics.data.Item;
 import org.informatics.data.Shop;
 import org.informatics.service.InvoiceService;
 import org.informatics.service.InvoiceSequenceService;
-
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 public class InvoiceServiceImpl implements InvoiceService {
@@ -18,7 +18,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Invoice createInvoice(Shop shop, Employee employee, Date date, Double totalPrice, Map<Item, Integer> items) {
+    public Invoice createInvoice(Shop shop, Employee employee, Date date, Double totalPrice, Map<String, List<Item>> items) {
         return new Invoice(invoiceSequenceService.incrementInvoiceSequenceId(shop), employee, date, totalPrice, items);
     }
 }

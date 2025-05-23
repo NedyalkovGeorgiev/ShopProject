@@ -28,16 +28,17 @@ public class ItemExpirationScheduler {
     }
 
     private void checkItemExpiration() {
-        System.out.println("This got printed at: " + new Date());
         List<Item> itemsToRemove = new ArrayList<>();
 
-        for (Item item : shop.getAvailableItems().keySet()) {
-            if (Category.NON_FOOD.equals(item.category())) {
-                continue;
-            }
+        for (List<Item> items : shop.getAvailableItems().values()) {
+            for (Item item : items) {
+                if (Category.NON_FOOD.equals(item.category())) {
+                    continue;
+                }
 
-            if (new Date().after(item.expiryDate())) {
-                itemsToRemove.add(item);
+                if (new Date().after(item.expiryDate())) {
+                    itemsToRemove.add(item);
+                }
             }
         }
 

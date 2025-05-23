@@ -4,7 +4,7 @@ import java.io.*;
 
 import static org.informatics.Constants.*;
 
-public abstract class FileIOUtil<T> {
+public abstract class FileIOUtil {
     protected String read(String directoryName, String fileName, long shopId) throws IOException {
         fileName = directoryName + PATH_DELIMITER + fileName + INVOICE_FILE_NAME_DELIMITER + shopId;
 
@@ -26,7 +26,7 @@ public abstract class FileIOUtil<T> {
         }
     }
 
-    protected void write(String directoryName, String fileName, T object) throws IOException {
+    protected void write(String directoryName, String fileName, String objectToSave) throws IOException {
         File directory = new File(directoryName);
         if(!directory.exists()) {
             directory.mkdirs();
@@ -35,7 +35,7 @@ public abstract class FileIOUtil<T> {
         File file = new File(directory, fileName);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write(object.toString());
+            writer.write(objectToSave);
         } catch (FileNotFoundException fileNotFoundException) {
             throw new FileNotFoundException(fileNotFoundException.toString());
         } catch (IOException ioException) {

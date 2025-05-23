@@ -1,11 +1,13 @@
 package org.informatics.data;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Cart {
-    private Map<Item, Integer> items;
+    private final Map<String, List<Item>> items = new HashMap<>();
 
-    public Map<Item, Integer> getItems() {
+    public Map<String, List<Item>> getItems() {
         return items;
     }
 }

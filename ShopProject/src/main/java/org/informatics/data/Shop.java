@@ -1,16 +1,16 @@
 package org.informatics.data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Shop {
-
     private final long id;
     private final List<Employee> employees;
-    private Map<Item, Integer> deliveredItems = new HashMap<>();
-    private Map<Item, Integer> availableItems = new HashMap<>();
-    private Map<Item, Integer> soldItems = new HashMap<>();
+    private final Map<String, List<Item>> deliveredItems = new HashMap<>();
+    private final Map<String, List<Item>> availableItems = new HashMap<>();
+    private final Map<String, List<Item>> soldItems = new HashMap<>();
     private final Double markup;
 
     public Shop(long id, List<Employee> employees, Double markup) {
@@ -19,28 +19,54 @@ public class Shop {
         this.markup = markup;
     }
 
-    public Map<Item, Integer> getDeliveredItems() {
+    public Map<String, List<Item>> getDeliveredItems() {
         return deliveredItems;
     }
 
-    public Map<Item, Integer> getAvailableItems() {
+    public Map<String, List<Item>> getAvailableItems() {
         return availableItems;
     }
 
-    public void setAvailableItems(Map<Item, Integer> availableItems) {
-        this.availableItems = availableItems;
-    }
-
-    public Map<Item, Integer> getSoldItems() {
+    public Map<String, List<Item>> getSoldItems() {
         return soldItems;
     }
 
-    public void addToSoldItems(Map<Item, Integer> soldItems) {
-        for (Item item : soldItems.keySet()) {
-            Integer quantityOfSoldItemInShop = this.soldItems.get(item);
-            Integer quantity = soldItems.get(item);
+    public void addToDeliveredItems(Map<String, List<Item>> deliveredItems) {
+        for (String itemName : deliveredItems.keySet()) {
+            this.deliveredItems.compute(itemName, (key, existingList) -> {
+                if (existingList == null) {
+                    return new ArrayList<>(deliveredItems.get(itemName));
+                } else {
+                    existingList.addAll(deliveredItems.get(itemName));
+                    return existingList;
+                }
+            });
+        }
+    }
 
-            this.getDeliveredItems().compute(item, (key, value) -> quantityOfSoldItemInShop == null ? quantity : quantityOfSoldItemInShop + quantity);
+    public void addToAvailableItems(Map<String, List<Item>> deliveredItems) {
+        for (String itemName : deliveredItems.keySet()) {
+            this.availableItems.compute(itemName, (key, existingList) -> {
+                if (existingList == null) {
+                    return new ArrayList<>(deliveredItems.get(itemName));
+                } else {
+                    existingList.addAll(deliveredItems.get(itemName));
+                    return existingList;
+                }
+            });
+        }
+    }
+
+    public void addToSoldItems(Map<String, List<Item>> soldItems) {
+        for (String itemName : soldItems.keySet()) {
+            this.soldItems.compute(itemName, (key, existingList) -> {
+                if (existingList == null) {
+                    return new ArrayList<>(soldItems.get(itemName));
+                } else {
+                    existingList.addAll(soldItems.get(itemName));
+                    return existingList;
+                }
+            });
         }
     }
 

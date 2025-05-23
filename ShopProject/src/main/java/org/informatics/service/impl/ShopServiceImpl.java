@@ -5,15 +5,22 @@ import org.informatics.data.Item;
 import org.informatics.data.Shop;
 import org.informatics.exceptions.NoDeliveredItemsException;
 import org.informatics.exceptions.NoEmployeesException;
+import org.informatics.service.ItemService;
 import org.informatics.service.ShopService;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
 
-import static org.informatics.Constants.INVOICE_DIRECTORY_NAME;
-import static org.informatics.Constants.TOTAL;
+import static org.informatics.Constants.*;
+import static org.informatics.Constants.PERCENT;
 
 public class ShopServiceImpl implements ShopService {
+    private final ItemService itemService;
+
+    public ShopServiceImpl(ItemService itemService) {
+        this.itemService = itemService;
+    }
+
     @Override
     public void removeExpiredItem(Shop shop, List<Item> item) {
         for (Item itemToRemove : item) {
@@ -103,14 +110,26 @@ public class ShopServiceImpl implements ShopService {
     }
 
     private double calculateDeliveryExpenses(Shop shop) throws NoDeliveredItemsException {
-        Map<Item, Integer> deliveredItems = shop.getDeliveredItems();
+        Map<String, List<Item>> deliveredItems = shop.getDeliveredItems();
 
         if (deliveredItems.isEmpty()) {
-            throw new NoDeliveredItemsException("Shop with Id:" + shop.getId() + " has no delivered items!");
+            throw new NoDeliveredItemsException("Shop with Id: " + shop.getId() + " has no delivered items!");
         }
 
-        return shop.getDeliveredItems().entrySet().stream()
-                .mapToDouble(entry -> entry.getKey().price() * entry.getValue())
+        return deliveredItems.values().stream()
+                .flatMap(List::stream)
+                .mapToDouble(Item::price)
                 .sum();
+    }
+
+    @Override
+    public Double calculateMarkup(Double price, Double markup) {
+        return price + price * markup/PERCENT;
+    }
+
+    @Override
+    public Double calculateDiscount(Double price, Item item) {
+        double discount = itemService.getDiscount(item);
+        return price * discount/PERCENT;
     }
 }

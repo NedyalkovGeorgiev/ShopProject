@@ -2,8 +2,9 @@ package org.informatics.service;
 
 import org.informatics.data.Item;
 import org.informatics.data.Shop;
-import java.util.Map;
+
+import java.util.List;
 
 public interface DeliveryService {
-    void delivery(Map<Item, Integer> deliveredItems, Shop shop);
+    void delivery(List<Item> deliveredItems, Shop shop);
 }
