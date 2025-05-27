@@ -1,15 +1,14 @@
 ===================== INVOICE ====================
 Invoice ID : 2
-Date       : Fri May 23 22:58:39 EEST 2025
-Employee   : John Doe (ID: 1)
+Date       : Tue May 27 05:20:44 EEST 2025
+Employee   : Jane Smith (ID: 2)
 
 Item                   Qty Unit Price        Total
 --------------------------------------------------
-Meso                     1      24.35        24.35
-Kashkaval                2      13.70        27.40
-Chorapi                  1       5.70         5.70
-Halva                    1       6.20         6.20
-Voda                     1       1.50         1.50
+Toothpaste               1      10.50        10.50
+Shampoo                  1      29.40        29.40
+Juice                    4       6.60        26.40
+Cheese                   2      23.70        47.40
 --------------------------------------------------
-TOTAL:                                    420.69
+TOTAL:                                    113.70
 ==================================================

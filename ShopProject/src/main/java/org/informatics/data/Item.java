@@ -1,5 +1,6 @@
 package org.informatics.data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 public record Item(
@@ -8,4 +9,4 @@ public record Item(
         Double price,
         Category category,
         Date expiryDate
-) {}
+) implements Serializable {}

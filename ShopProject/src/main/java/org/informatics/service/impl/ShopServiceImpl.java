@@ -22,10 +22,16 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public void removeExpiredItem(Shop shop, List<Item> item) {
-        for (Item itemToRemove : item) {
-            shop.getAvailableItems().remove(itemToRemove);
-            System.out.println("This got REMOVED: " + itemToRemove.name());
+    public void removeExpiredItem(Shop shop, List<Item> itemsToRemove) {
+        for (Item itemToRemove : itemsToRemove) {
+            List<Item> itemList = shop.getAvailableItems().get(itemToRemove.name());
+            if (itemList != null) {
+                itemList.removeIf(i -> i.equals(itemToRemove));
+                if (itemList.isEmpty()) {
+                    shop.getAvailableItems().remove(itemToRemove.name());
+                }
+                System.out.println("This got REMOVED: " + itemToRemove.name());
+            }
         }
     }
 

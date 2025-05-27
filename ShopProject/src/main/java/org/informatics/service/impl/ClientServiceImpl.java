@@ -40,7 +40,7 @@ public class ClientServiceImpl implements ClientService {
             if (itemsToAddToCart.get(itemName) == null) {
                 itemsToAddToCart.put(itemName, new ArrayList<>(Collections.singletonList(itemsAvailableInShop.get(itemName).get(i - 1))));
             } else {
-                itemsToAddToCart.get(itemName).add(itemsAvailableInShop.get(itemName).get(i));
+                itemsToAddToCart.get(itemName).add(itemsAvailableInShop.get(itemName).get(i - 1));
             }
 
             itemsAvailableInShop.get(itemName).remove(i - 1);
